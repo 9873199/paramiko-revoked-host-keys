@@ -2,7 +2,7 @@
 
 这是模型单轮结束后对冻结版本的复核，不含追问或产物修补。建议评分 3 分，具体事实见 Feedback.md 与 evidence-map.json。模型原轨测试和下列独立测试分开记录。
 
-在 Windows Python 3.11 环境安装项目本身及 pytest、cryptography、bcrypt、PyNaCl（具体版本见 environment-reviewed.json）。从冻结提交创建干净 checkout，在 PowerShell 中将 TEMP/TMP 和所有测试临时目录放到自己的缓存目录。
+在 Windows Python 3.14.3 环境安装项目本身及 pytest、cryptography、bcrypt、PyNaCl（具体版本见 environment-reviewed.json）。从冻结提交创建干净 checkout，在 PowerShell 中将 TEMP/TMP 和所有测试临时目录放到自己的缓存目录。
 
 在仓库根目录执行（$verifyCache 为明确指定的缓存目录）：
 
