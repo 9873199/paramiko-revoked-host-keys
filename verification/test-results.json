@@ -1,0 +1,18 @@
+{
+  "time": "2026-11-11T23:06:09+08:00",
+  "run_id": "uf-20261111-sec-03-ssh-revocation-high-20261111",
+  "checks": {
+    "regression": {
+      "tests": 80,
+      "passed": 78,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2,
+      "failure_cases": [],
+      "exit_code": 0
+    }
+  },
+  "artifact_hashes_unchanged": true,
+  "score": null,
+  "feedback": "PENDING_SEMANTIC_REVIEW"
+}

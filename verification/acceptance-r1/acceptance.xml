@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="24" time="1.223" timestamp="2026-11-11T23:09:56.115030+08:00" hostname="DESKTOP-BPAMAV8"><testcase classname="verification.acceptance-r1.test_acceptance" name="test_revoked_precedes_trusted_and_policy[True-True-system]" time="0.139" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_revoked_precedes_trusted_and_policy[True-True-user]" time="0.012" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_revoked_precedes_trusted_and_policy[True-True-both]" time="0.014" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_revoked_precedes_trusted_and_policy[True-False-system]" time="0.011" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_revoked_precedes_trusted_and_policy[True-False-user]" time="0.016" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_revoked_precedes_trusted_and_policy[True-False-both]" time="0.022" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_revoked_precedes_trusted_and_policy[False-True-system]" time="0.013" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_revoked_precedes_trusted_and_policy[False-True-user]" time="0.016" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_revoked_precedes_trusted_and_policy[False-True-both]" time="0.014" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_revoked_precedes_trusted_and_policy[False-False-system]" time="0.014" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_revoked_precedes_trusted_and_policy[False-False-user]" time="0.017" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_revoked_precedes_trusted_and_policy[False-False-both]" time="0.014" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_revocation_host_forms[unit.local,alias.local]" time="0.012" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_revocation_host_forms[|1|GnoUOSiepcvfaK1AGPcBmHKegaE=|x6z8xYK8P5PHExAA/t9+UPaa6Wo=]" time="0.012" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_revocation_host_forms[[unit.local]:2222]" time="0.015" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_unrevoked_alternative_key_uses_existing_trust" time="0.035" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_matching_revocation_different_host_is_not_global" time="0.014" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_unknown_alternative_is_not_autoaccepted_after_target_revocation" time="0.011" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_malformed_revocation_is_not_silently_trusted_or_ignored[@revoked unit.local\n]" time="0.003"><failure message="Failed: DID NOT RAISE &lt;class 'Exception'&gt;">tmp_path = WindowsPath('D:/hc/userFeedback/cache/execution-security-high-resume-20261111/evaluation/uf-20261111-sec-03-ssh-revocation-high-20261111/verification/acceptance-r1/tmp-acceptance/test_malformed_revocation_is_n0')
+text = '@revoked unit.local\n'
+
+    @pytest.mark.parametrize('text',[
+        '@revoked unit.local\n',
+        '@revoked unit.local ssh-rsa\n',
+        '@revoked unit.local ssh-rsa invalid-base64!\n',
+    ])
+    def test_malformed_revocation_is_not_silently_trusted_or_ignored(tmp_path,text):
+        path=tmp_path/'broken-revocations';path.write_text(text,encoding='utf-8')
+&gt;       with pytest.raises(Exception):paramiko.HostKeys(str(path))
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'Exception'&gt;
+
+..\verification\acceptance-r1\test_acceptance.py:83: Failed</failure></testcase><testcase classname="verification.acceptance-r1.test_acceptance" name="test_malformed_revocation_is_not_silently_trusted_or_ignored[@revoked unit.local ssh-rsa\n]" time="0.003"><failure message="Failed: DID NOT RAISE &lt;class 'Exception'&gt;">tmp_path = WindowsPath('D:/hc/userFeedback/cache/execution-security-high-resume-20261111/evaluation/uf-20261111-sec-03-ssh-revocation-high-20261111/verification/acceptance-r1/tmp-acceptance/test_malformed_revocation_is_n1')
+text = '@revoked unit.local ssh-rsa\n'
+
+    @pytest.mark.parametrize('text',[
+        '@revoked unit.local\n',
+        '@revoked unit.local ssh-rsa\n',
+        '@revoked unit.local ssh-rsa invalid-base64!\n',
+    ])
+    def test_malformed_revocation_is_not_silently_trusted_or_ignored(tmp_path,text):
+        path=tmp_path/'broken-revocations';path.write_text(text,encoding='utf-8')
+&gt;       with pytest.raises(Exception):paramiko.HostKeys(str(path))
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'Exception'&gt;
+
+..\verification\acceptance-r1\test_acceptance.py:83: Failed</failure></testcase><testcase classname="verification.acceptance-r1.test_acceptance" name="test_malformed_revocation_is_not_silently_trusted_or_ignored[@revoked unit.local ssh-rsa invalid-base64!\n]" time="0.003" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_roundtrip_does_not_downgrade_marker" time="0.014" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_missing_and_corrupt_files_are_distinguishable" time="0.003" /><testcase classname="verification.acceptance-r1.test_acceptance" name="test_no_revocation_config_compatibility" time="0.014" /></testsuite></testsuites>

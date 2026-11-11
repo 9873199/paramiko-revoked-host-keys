@@ -1,0 +1,19 @@
+{
+  "time": "2026-11-11T23:31:33+08:00",
+  "container_used": false,
+  "external_service_required": false,
+  "network_during_verification": "local socketpair only",
+  "dependencies": {
+    "python": "3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "paramiko_file": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\frozen-artifact\\paramiko\\__init__.py",
+    "packages": {
+      "paramiko": "5.1.0",
+      "cryptography": "50.0.2",
+      "bcrypt": "5.0.0",
+      "PyNaCl": "1.6.2",
+      "pytest": "8.4.2"
+    }
+  },
+  "setup_network_required": "pip dependencies and GitHub clone on a fresh machine"
+}

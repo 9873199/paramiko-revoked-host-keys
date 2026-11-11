@@ -1,0 +1,23 @@
+{
+  "time": "2026-11-11T23:31:33+08:00",
+  "duration_seconds": 75.0,
+  "width": 1280,
+  "height": 720,
+  "continuous": true,
+  "full_stream_decoded": true,
+  "black_intervals": [],
+  "reviewed_frames_seconds": [
+    3,
+    35,
+    70
+  ],
+  "content_reviewed": true,
+  "shown_scenarios": [
+    "revoked refusal",
+    "trusted alternative accepted",
+    "unknown alternative refused",
+    "malformed record accepted (FAIL exit1)"
+  ],
+  "helper_is_separate_verification_tool": true,
+  "video_sha256": "8c7467f99b0ca37d2cd06d6f67ffc2f2e1cd9a67d6029924eb7278a514476682"
+}

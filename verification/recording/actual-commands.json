@@ -1,0 +1,58 @@
+[
+  {
+    "id": "connection-1",
+    "argv": [
+      "D:\\hc\\userFeedback\\cache\\envs\\uf-20261111-sec-03-ssh-revocation\\Scripts\\python.exe",
+      "-B",
+      "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\verification\\acceptance-r1\\connection_check.py",
+      "--scenario",
+      "revoked",
+      "--directory",
+      "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\recording\\r1\\state-1"
+    ],
+    "exit_code": 0,
+    "finished_at_seconds": 2.37
+  },
+  {
+    "id": "connection-2",
+    "argv": [
+      "D:\\hc\\userFeedback\\cache\\envs\\uf-20261111-sec-03-ssh-revocation\\Scripts\\python.exe",
+      "-B",
+      "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\verification\\acceptance-r1\\connection_check.py",
+      "--scenario",
+      "trusted-alternative",
+      "--directory",
+      "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\recording\\r1\\state-2"
+    ],
+    "exit_code": 0,
+    "finished_at_seconds": 21.37
+  },
+  {
+    "id": "connection-3",
+    "argv": [
+      "D:\\hc\\userFeedback\\cache\\envs\\uf-20261111-sec-03-ssh-revocation\\Scripts\\python.exe",
+      "-B",
+      "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\verification\\acceptance-r1\\connection_check.py",
+      "--scenario",
+      "untrusted-alternative",
+      "--directory",
+      "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\recording\\r1\\state-3"
+    ],
+    "exit_code": 0,
+    "finished_at_seconds": 39.37
+  },
+  {
+    "id": "connection-4",
+    "argv": [
+      "D:\\hc\\userFeedback\\cache\\envs\\uf-20261111-sec-03-ssh-revocation\\Scripts\\python.exe",
+      "-B",
+      "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\verification\\acceptance-r1\\connection_check.py",
+      "--scenario",
+      "malformed-revocation",
+      "--directory",
+      "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\recording\\r1\\state-4"
+    ],
+    "exit_code": 1,
+    "finished_at_seconds": 56.32
+  }
+]

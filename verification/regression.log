@@ -1,0 +1,364 @@
+
+HostKeys
+
+    add
+    delitem
+    dict
+    dict set
+    entry delitem
+    load
+
+HostKeysTabs
+
+    add
+    delitem
+    dict
+    dict set
+    entry delitem
+    load
+
+HostKeyEntryRevoked
+
+    invalid host key is ssh exception
+    malformed revoked line raises invalid host key
+    parse revoked marker
+    repr indicates revocation
+    short revoked line returns none
+    to line round trips marker
+    unsupported marker is ignored
+
+HostKeysRevocation
+
+    add revoked and clear
+    hashed hostname revocation
+    malformed ordinary line remains skipped
+    malformed revoked line aborts load
+    merged files combine trust and revocation
+    missing file distinct from corrupt file
+    multiple hostnames in one revoked record
+    non default port revocation
+    overlapping multiname revocation keeps all hostnames
+    revocation exception carries target and public fingerprint
+    revocation is key specific
+    revocation takes precedence over trust
+    revoked key is reported revoked
+    revoked only host absent from trust mapping
+    save preserves revocation marker
+    structurally invalid revoked line also aborts load
+
+SSHClient
+
+    agent with unknown key type still works
+    auth timeout
+    auth trickledown
+    auto add policy
+    banner timeout
+    certs allowed as key filename values
+    certs implicitly loaded alongside key filename keys
+    channel timeout
+    cleanup
+    client
+    client can be used as context manager
+    client ecdsa
+    client ed25519
+    client rsa
+    closes socket on socket errors
+    default key locations trigger cert loads if found
+    disabled algorithms defaults to None
+    disabled algorithms passed directly if given
+    env update failures
+    host key negotiation 1
+    host key negotiation 2
+    host key negotiation 3
+    host key negotiation 4
+    missing key policy accepts classes or instances
+    multiple key files
+    multiple key files failure
+    reject policy
+    save host keys
+    transport factory defaults to Transport
+    transport factory may be specified
+    update environment
+
+HostKeyRevocationLoopback
+
+    alternative legitimate key uses normal trust rules
+    auto add policy does not mask revocation
+    error message names target and public fingerprint only
+    no revocation and unknown host still uses policy
+    no revocation configuration keeps legacy behavior
+    revocation in system file beats trust in user file
+    revoked key rejected even when also trusted
+    save host keys preserves revocation marker
+    untrusted alternative key fails closed under revocation policy
+
+PasswordPassphraseTests
+
+    passphrase kwarg not used for password auth
+    passphrase kwarg used for key passphrase
+    password kwarg not used for passphrase when passphrase kwarg given
+    password kwarg used for passphrase when no passphrase kwarg given
+    password kwarg works for password auth
+
+- generated xml file: D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\regression.xml -
+78 passed, 2 skipped in 5.05s
+--- Logging error ---
+Traceback (most recent call last):
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 322, in read_all
+    x = self.__socket.recv(n)
+OSError: [WinError 10038] 在一个非套接字上尝试了一个操作。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 2059, in run
+    ptype, m = self.packetizer.read_message()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 496, in read_message
+    header = self.read_all(self.__block_size_in, check_rekey=True)
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 337, in read_all
+    raise EOFError()
+EOFError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: I/O operation on closed file.
+Call stack:
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1044, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+    self._context.run(self.run)
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 2149, in run
+    self._log(DEBUG, "EOF in transport thread")
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 1791, in _log
+    self.logger.log(level, msg, *args)
+Message: 'EOF in transport thread'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 2059, in run
+    ptype, m = self.packetizer.read_message()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 496, in read_message
+    header = self.read_all(self.__block_size_in, check_rekey=True)
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 324, in read_all
+    raise EOFError()
+EOFError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: I/O operation on closed file.
+Call stack:
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1044, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+    self._context.run(self.run)
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 2149, in run
+    self._log(DEBUG, "EOF in transport thread")
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 1791, in _log
+    self.logger.log(level, msg, *args)
+Message: 'EOF in transport thread'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 322, in read_all
+    x = self.__socket.recv(n)
+OSError: [WinError 10038] 在一个非套接字上尝试了一个操作。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 2059, in run
+    ptype, m = self.packetizer.read_message()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 496, in read_message
+    header = self.read_all(self.__block_size_in, check_rekey=True)
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 337, in read_all
+    raise EOFError()
+EOFError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: I/O operation on closed file.
+Call stack:
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1044, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+    self._context.run(self.run)
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 2149, in run
+    self._log(DEBUG, "EOF in transport thread")
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 1791, in _log
+    self.logger.log(level, msg, *args)
+Message: 'EOF in transport thread'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 2059, in run
+    ptype, m = self.packetizer.read_message()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 496, in read_message
+    header = self.read_all(self.__block_size_in, check_rekey=True)
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 324, in read_all
+    raise EOFError()
+EOFError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: I/O operation on closed file.
+Call stack:
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1044, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+    self._context.run(self.run)
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 2149, in run
+    self._log(DEBUG, "EOF in transport thread")
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 1791, in _log
+    self.logger.log(level, msg, *args)
+Message: 'EOF in transport thread'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 322, in read_all
+    x = self.__socket.recv(n)
+OSError: [WinError 10038] 在一个非套接字上尝试了一个操作。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 2059, in run
+    ptype, m = self.packetizer.read_message()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 496, in read_message
+    header = self.read_all(self.__block_size_in, check_rekey=True)
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 337, in read_all
+    raise EOFError()
+EOFError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: I/O operation on closed file.
+Call stack:
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1044, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+    self._context.run(self.run)
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 2149, in run
+    self._log(DEBUG, "EOF in transport thread")
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 1791, in _log
+    self.logger.log(level, msg, *args)
+Message: 'EOF in transport thread'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 2059, in run
+    ptype, m = self.packetizer.read_message()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 496, in read_message
+    header = self.read_all(self.__block_size_in, check_rekey=True)
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 324, in read_all
+    raise EOFError()
+EOFError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: I/O operation on closed file.
+Call stack:
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1044, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+    self._context.run(self.run)
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 2149, in run
+    self._log(DEBUG, "EOF in transport thread")
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 1791, in _log
+    self.logger.log(level, msg, *args)
+Message: 'EOF in transport thread'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 322, in read_all
+    x = self.__socket.recv(n)
+OSError: [WinError 10038] 在一个非套接字上尝试了一个操作。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 2059, in run
+    ptype, m = self.packetizer.read_message()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 496, in read_message
+    header = self.read_all(self.__block_size_in, check_rekey=True)
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 337, in read_all
+    raise EOFError()
+EOFError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: I/O operation on closed file.
+Call stack:
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1044, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+    self._context.run(self.run)
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 2149, in run
+    self._log(DEBUG, "EOF in transport thread")
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 1791, in _log
+    self.logger.log(level, msg, *args)
+Message: 'EOF in transport thread'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 2059, in run
+    ptype, m = self.packetizer.read_message()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 496, in read_message
+    header = self.read_all(self.__block_size_in, check_rekey=True)
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\packet.py", line 324, in read_all
+    raise EOFError()
+EOFError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: I/O operation on closed file.
+Call stack:
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1044, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+    self._context.run(self.run)
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 2149, in run
+    self._log(DEBUG, "EOF in transport thread")
+  File "D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\frozen-artifact\paramiko\transport.py", line 1791, in _log
+    self.logger.log(level, msg, *args)
+Message: 'EOF in transport thread'
+Arguments: ()

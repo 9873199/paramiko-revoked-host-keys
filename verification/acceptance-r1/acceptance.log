@@ -1,0 +1,65 @@
+revoked precedes trusted and policy[True-True-system]
+revoked precedes trusted and policy[True-True-user]
+revoked precedes trusted and policy[True-True-both]
+revoked precedes trusted and policy[True-False-system]
+revoked precedes trusted and policy[True-False-user]
+revoked precedes trusted and policy[True-False-both]
+revoked precedes trusted and policy[False-True-system]
+revoked precedes trusted and policy[False-True-user]
+revoked precedes trusted and policy[False-True-both]
+revoked precedes trusted and policy[False-False-system]
+revoked precedes trusted and policy[False-False-user]
+revoked precedes trusted and policy[False-False-both]
+revocation host forms[unit.local,alias.local]
+revocation host forms[|1|GnoUOSiepcvfaK1AGPcBmHKegaE=|x6z8xYK8P5PHExAA/t9+UPaa6Wo=]
+revocation host forms[[unit.local]:2222]
+unrevoked alternative key uses existing trust
+matching revocation different host is not global
+unknown alternative is not autoaccepted after target revocation
+malformed revocation is not silently trusted or ignored[@revoked unit.local\n]
+malformed revocation is not silently trusted or ignored[@revoked unit.local ssh-rsa\n]
+malformed revocation is not silently trusted or ignored[@revoked unit.local ssh-rsa invalid-base64!\n]
+roundtrip does not downgrade marker
+missing and corrupt files are distinguishable
+no revocation config compatibility
+
+================================== FAILURES ===================================
+_ test_malformed_revocation_is_not_silently_trusted_or_ignored[@revoked unit.local\n] _
+
+tmp_path = WindowsPath('D:/hc/userFeedback/cache/execution-security-high-resume-20261111/evaluation/uf-20261111-sec-03-ssh-revocation-high-20261111/verification/acceptance-r1/tmp-acceptance/test_malformed_revocation_is_n0')
+text = '@revoked unit.local\n'
+
+    @pytest.mark.parametrize('text',[
+        '@revoked unit.local\n',
+        '@revoked unit.local ssh-rsa\n',
+        '@revoked unit.local ssh-rsa invalid-base64!\n',
+    ])
+    def test_malformed_revocation_is_not_silently_trusted_or_ignored(tmp_path,text):
+        path=tmp_path/'broken-revocations';path.write_text(text,encoding='utf-8')
+>       with pytest.raises(Exception):paramiko.HostKeys(str(path))
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'Exception'>
+
+..\verification\acceptance-r1\test_acceptance.py:83: Failed
+_ test_malformed_revocation_is_not_silently_trusted_or_ignored[@revoked unit.local ssh-rsa\n] _
+
+tmp_path = WindowsPath('D:/hc/userFeedback/cache/execution-security-high-resume-20261111/evaluation/uf-20261111-sec-03-ssh-revocation-high-20261111/verification/acceptance-r1/tmp-acceptance/test_malformed_revocation_is_n1')
+text = '@revoked unit.local ssh-rsa\n'
+
+    @pytest.mark.parametrize('text',[
+        '@revoked unit.local\n',
+        '@revoked unit.local ssh-rsa\n',
+        '@revoked unit.local ssh-rsa invalid-base64!\n',
+    ])
+    def test_malformed_revocation_is_not_silently_trusted_or_ignored(tmp_path,text):
+        path=tmp_path/'broken-revocations';path.write_text(text,encoding='utf-8')
+>       with pytest.raises(Exception):paramiko.HostKeys(str(path))
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'Exception'>
+
+..\verification\acceptance-r1\test_acceptance.py:83: Failed
+- generated xml file: D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\verification\acceptance-r1\acceptance.xml -
+=========================== short test summary info ===========================
+FAILED ..\verification\acceptance-r1\test_acceptance.py::test_malformed_revocation_is_not_silently_trusted_or_ignored[@revoked unit.local\n]
+FAILED ..\verification\acceptance-r1\test_acceptance.py::test_malformed_revocation_is_not_silently_trusted_or_ignored[@revoked unit.local ssh-rsa\n]
+2 failed, 22 passed, 7 warnings in 1.29s

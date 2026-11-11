@@ -1,0 +1,10 @@
+{
+  "video": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\recording\\r1\\product-run-75s.mp4",
+  "sha256": "8c7467f99b0ca37d2cd06d6f67ffc2f2e1cd9a67d6029924eb7278a514476682",
+  "capture_exit_code": 0,
+  "continuous": true,
+  "nominal_seconds": 75,
+  "source": "Fresh actual console process executing frozen-product commands",
+  "helper_is_separate_verification_tool": true,
+  "content_qa": "PENDING"
+}

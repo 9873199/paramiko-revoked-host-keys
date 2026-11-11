@@ -1,0 +1,17 @@
+{
+  "time": "2026-11-11T23:22:40+08:00",
+  "repository": "9873199/paramiko-revoked-host-keys",
+  "visibility": "public",
+  "public_unauthenticated_api_verified": true,
+  "initial_sha": "0e9ccb91e0f9a68f2587233d523ad7fe46e730fe",
+  "final_sha": "1fc8a7c4c317b31a8076c591e424f03c2d21129e",
+  "initial_url": "https://github.com/9873199/paramiko-revoked-host-keys/commit/0e9ccb91e0f9a68f2587233d523ad7fe46e730fe",
+  "final_url": "https://github.com/9873199/paramiko-revoked-host-keys/commit/1fc8a7c4c317b31a8076c591e424f03c2d21129e",
+  "all_frozen_blob_hashes_verified": true,
+  "initial_is_ancestor": true,
+  "model_commit_chain_preserved": true,
+  "frozen_files": 196,
+  "public_branch": "review-uid117-high-resume-20261111",
+  "automatic_submission": false,
+  "user_review_required": true
+}

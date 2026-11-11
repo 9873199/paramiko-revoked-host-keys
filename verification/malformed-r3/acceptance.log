@@ -1,0 +1,98 @@
+{'case': 'missing-type-and-key', 'phase': 'connection', 'error_type': None, 'authentication_requests': 1}
+corrupt revocation file never allows authentication[missing-type-and-key]
+{'case': 'missing-key', 'phase': 'connection', 'error_type': None, 'authentication_requests': 1}
+corrupt revocation file never allows authentication[missing-key]
+{'case': 'unknown-key-type', 'phase': 'connection', 'error_type': None, 'authentication_requests': 1}
+corrupt revocation file never allows authentication[unknown-key-type]
+
+================================== FAILURES ===================================
+_ test_corrupt_revocation_file_never_allows_authentication[missing-type-and-key] _
+
+tmp_path = WindowsPath('D:/hc/userFeedback/cache/execution-security-high-resume-20261111/evaluation/uf-20261111-sec-03-ssh-revocation-high-20261111/verification/malformed-r3/tmp-acceptance/test_corrupt_revocation_file_n0')
+case = 'missing-type-and-key'
+
+    @pytest.mark.parametrize('case',['missing-type-and-key','missing-key','unknown-key-type'])
+    def test_corrupt_revocation_file_never_allows_authentication(tmp_path,case):
+        key=paramiko.ECDSAKey.generate()
+        malformed={
+            'missing-type-and-key':'@revoked unit.local\n',
+            'missing-key':'@revoked unit.local '+key.get_name()+'\n',
+            'unknown-key-type':'@revoked unit.local ssh-unrecognized '+key.get_base64()+'\n',
+        }[case]
+        policy=helper.line('unit.local',key)+malformed
+        try:error,counts=helper.exchange(tmp_path,key,user=policy,autoadd=True)
+        except Exception as error:
+            # exchange loads the explicitly existing policy file before creating
+            # the loopback transport. A parser refusal is therefore fail-closed.
+            print({'case':case,'phase':'policy_load','refusal_type':type(error).__name__,'authentication_started':False})
+            return
+        print({'case':case,'phase':'connection','error_type':None if error is None else type(error).__name__,'authentication_requests':counts['auth']})
+>       assert isinstance(error,paramiko.SSHException) and counts['auth']==0,'Corrupt revocation policy was ignored and authentication was allowed'
+E       AssertionError: Corrupt revocation policy was ignored and authentication was allowed
+E       assert (False)
+E        +  where False = isinstance(None, <class 'paramiko.ssh_exception.SSHException'>)
+E        +    where <class 'paramiko.ssh_exception.SSHException'> = paramiko.SSHException
+
+..\verification\malformed-r3\test_acceptance.py:21: AssertionError
+____ test_corrupt_revocation_file_never_allows_authentication[missing-key] ____
+
+tmp_path = WindowsPath('D:/hc/userFeedback/cache/execution-security-high-resume-20261111/evaluation/uf-20261111-sec-03-ssh-revocation-high-20261111/verification/malformed-r3/tmp-acceptance/test_corrupt_revocation_file_n1')
+case = 'missing-key'
+
+    @pytest.mark.parametrize('case',['missing-type-and-key','missing-key','unknown-key-type'])
+    def test_corrupt_revocation_file_never_allows_authentication(tmp_path,case):
+        key=paramiko.ECDSAKey.generate()
+        malformed={
+            'missing-type-and-key':'@revoked unit.local\n',
+            'missing-key':'@revoked unit.local '+key.get_name()+'\n',
+            'unknown-key-type':'@revoked unit.local ssh-unrecognized '+key.get_base64()+'\n',
+        }[case]
+        policy=helper.line('unit.local',key)+malformed
+        try:error,counts=helper.exchange(tmp_path,key,user=policy,autoadd=True)
+        except Exception as error:
+            # exchange loads the explicitly existing policy file before creating
+            # the loopback transport. A parser refusal is therefore fail-closed.
+            print({'case':case,'phase':'policy_load','refusal_type':type(error).__name__,'authentication_started':False})
+            return
+        print({'case':case,'phase':'connection','error_type':None if error is None else type(error).__name__,'authentication_requests':counts['auth']})
+>       assert isinstance(error,paramiko.SSHException) and counts['auth']==0,'Corrupt revocation policy was ignored and authentication was allowed'
+E       AssertionError: Corrupt revocation policy was ignored and authentication was allowed
+E       assert (False)
+E        +  where False = isinstance(None, <class 'paramiko.ssh_exception.SSHException'>)
+E        +    where <class 'paramiko.ssh_exception.SSHException'> = paramiko.SSHException
+
+..\verification\malformed-r3\test_acceptance.py:21: AssertionError
+_ test_corrupt_revocation_file_never_allows_authentication[unknown-key-type] __
+
+tmp_path = WindowsPath('D:/hc/userFeedback/cache/execution-security-high-resume-20261111/evaluation/uf-20261111-sec-03-ssh-revocation-high-20261111/verification/malformed-r3/tmp-acceptance/test_corrupt_revocation_file_n2')
+case = 'unknown-key-type'
+
+    @pytest.mark.parametrize('case',['missing-type-and-key','missing-key','unknown-key-type'])
+    def test_corrupt_revocation_file_never_allows_authentication(tmp_path,case):
+        key=paramiko.ECDSAKey.generate()
+        malformed={
+            'missing-type-and-key':'@revoked unit.local\n',
+            'missing-key':'@revoked unit.local '+key.get_name()+'\n',
+            'unknown-key-type':'@revoked unit.local ssh-unrecognized '+key.get_base64()+'\n',
+        }[case]
+        policy=helper.line('unit.local',key)+malformed
+        try:error,counts=helper.exchange(tmp_path,key,user=policy,autoadd=True)
+        except Exception as error:
+            # exchange loads the explicitly existing policy file before creating
+            # the loopback transport. A parser refusal is therefore fail-closed.
+            print({'case':case,'phase':'policy_load','refusal_type':type(error).__name__,'authentication_started':False})
+            return
+        print({'case':case,'phase':'connection','error_type':None if error is None else type(error).__name__,'authentication_requests':counts['auth']})
+>       assert isinstance(error,paramiko.SSHException) and counts['auth']==0,'Corrupt revocation policy was ignored and authentication was allowed'
+E       AssertionError: Corrupt revocation policy was ignored and authentication was allowed
+E       assert (False)
+E        +  where False = isinstance(None, <class 'paramiko.ssh_exception.SSHException'>)
+E        +    where <class 'paramiko.ssh_exception.SSHException'> = paramiko.SSHException
+
+..\verification\malformed-r3\test_acceptance.py:21: AssertionError
+- generated xml file: D:\hc\userFeedback\cache\execution-security-high-resume-20261111\evaluation\uf-20261111-sec-03-ssh-revocation-high-20261111\verification\malformed-r3\acceptance.xml -
+=========================== short test summary info ===========================
+FAILED ..\verification\malformed-r3\test_acceptance.py::test_corrupt_revocation_file_never_allows_authentication[missing-type-and-key]
+FAILED ..\verification\malformed-r3\test_acceptance.py::test_corrupt_revocation_file_never_allows_authentication[missing-key]
+FAILED ..\verification\malformed-r3\test_acceptance.py::test_corrupt_revocation_file_never_allows_authentication[unknown-key-type]
+3 failed in 0.83s

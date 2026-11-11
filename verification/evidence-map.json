@@ -1,0 +1,142 @@
+{
+  "time": "2026-11-11T23:31:31+08:00",
+  "uid": 117,
+  "frozen_commit": "1fc8a7c4c317b31a8076c591e424f03c2d21129e",
+  "native_trajectory_sha256": "059fcc695aae996c3dcf42d9e15da9f2353ab7bfd7dd528c0e74fa4360427d6a",
+  "private_reasoning_used": false,
+  "requirements": [
+    {
+      "requirement": "撤销优先于普通信任与 AutoAddPolicy，认证前拒绝",
+      "outcome": "PASS",
+      "source": [
+        "paramiko/client.py:213",
+        "paramiko/client.py:476"
+      ],
+      "evidence": [
+        "verification/acceptance-r1/test_acceptance.py::test_revoked_precedes_trusted_and_policy",
+        "verification/acceptance-r1/acceptance.log"
+      ]
+    },
+    {
+      "requirement": "合法替代密钥按原有信任规则判断，未知替代不得自动接纳",
+      "outcome": "PASS",
+      "source": [
+        "paramiko/client.py:479"
+      ],
+      "evidence": [
+        "verification/acceptance-r1/test_acceptance.py::test_unrevoked_alternative_key_uses_existing_trust",
+        "verification/acceptance-r1/test_acceptance.py::test_unknown_alternative_is_not_autoaccepted_after_target_revocation"
+      ]
+    },
+    {
+      "requirement": "系统/用户合并、多主机名、哈希与非默认端口",
+      "outcome": "PASS",
+      "evidence": [
+        "verification/acceptance-r1/test_acceptance.py::test_revoked_precedes_trusted_and_policy",
+        "verification/acceptance-r1/test_acceptance.py::test_revocation_host_forms"
+      ]
+    },
+    {
+      "requirement": "异常包含目标与公开指纹，不含认证密码",
+      "outcome": "PASS",
+      "evidence": [
+        "verification/acceptance-r1/test_acceptance.py::test_revoked_precedes_trusted_and_policy"
+      ],
+      "limits": "检查本次测试密码未进入诊断；不声称对所有信息泄露路径作形式证明"
+    },
+    {
+      "requirement": "畸形撤销记录；缺失和损坏文件可区分",
+      "outcome": "PARTIAL_FAIL",
+      "source": [
+        "paramiko/hostkeys.py:123",
+        "paramiko/hostkeys.py:461",
+        "paramiko/hostkeys.py:488"
+      ],
+      "evidence": [
+        "verification/acceptance-r1/acceptance.log",
+        "verification/malformed-r3/acceptance.log"
+      ],
+      "observed": "缺失文件与坏 base64 可区分，但缺字段及未知 key type 行被忽略；三类损坏配置均允许一次实际认证"
+    },
+    {
+      "requirement": "保存不降级撤销标记",
+      "outcome": "PASS",
+      "evidence": [
+        "verification/acceptance-r1/test_acceptance.py::test_roundtrip_does_not_downgrade_marker"
+      ]
+    },
+    {
+      "requirement": "临时密钥、回环 SSH、认证计数、无撤销配置兼容测试",
+      "outcome": "PASS",
+      "evidence": [
+        "verification/acceptance-r1/test_acceptance.py",
+        "verification/malformed-r3/ssh_fixture_helpers.py"
+      ],
+      "limits": "独立测试使用本地 socketpair；模型原轨另外使用 127.0.0.1 listener"
+    }
+  ],
+  "observable_process": [
+    {
+      "lines": [
+        302,
+        303,
+        306,
+        313,
+        317
+      ],
+      "finding": "回环测试及辅助函数修正；已修正的问题不作残留缺陷扣分"
+    },
+    {
+      "lines": [
+        331,
+        332,
+        362,
+        363
+      ],
+      "finding": "初始库复现 sftp 收集及 Windows pkey 失败，不扣模型分"
+    },
+    {
+      "lines": [
+        517,
+        520,
+        530
+      ],
+      "finding": "短行返回 None 的测试与全覆盖及 fail-closed 完成声明矛盾"
+    }
+  ],
+  "independent_suites": [
+    {
+      "path": ".",
+      "result": "regression 78 passed / 2 skipped"
+    },
+    {
+      "path": "verification/acceptance-r1",
+      "result": "22 passed / 2 failed"
+    },
+    {
+      "path": "verification/malformed-r3",
+      "result": "0 passed / 3 failed; each authentication_requests=1"
+    }
+  ],
+  "excluded_engineering_attempts": [
+    {
+      "path": "verification/malformed-r2-run",
+      "reason": "评价工具未把 helper 放入执行目录导致 ModuleNotFoundError；不是模型缺陷，不评分"
+    },
+    {
+      "path": "verification/malformed-r2",
+      "reason": "仅预放 helper，未形成有效验收"
+    }
+  ],
+  "original_scope_separate": {
+    "lines": [
+      457,
+      522
+    ],
+    "results": [
+      "89 passed / 2 skipped (related modules)",
+      "405 passed / 13 skipped / 1 baseline failure (non-sftp)"
+    ],
+    "not_combined_with_independent_results": true
+  }
+}

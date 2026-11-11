@@ -1,0 +1,22 @@
+{
+  "time": "2026-11-11T23:17:47+08:00",
+  "run_id": "uf-20261111-sec-03-ssh-revocation-high-20261111",
+  "checks": {
+    "acceptance": {
+      "tests": 3,
+      "passed": 0,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0,
+      "failure_cases": [
+        "test_corrupt_revocation_file_never_allows_authentication[missing-type-and-key]",
+        "test_corrupt_revocation_file_never_allows_authentication[missing-key]",
+        "test_corrupt_revocation_file_never_allows_authentication[unknown-key-type]"
+      ],
+      "exit_code": 1
+    }
+  },
+  "artifact_hashes_unchanged": true,
+  "score": null,
+  "feedback": "PENDING_SEMANTIC_REVIEW"
+}

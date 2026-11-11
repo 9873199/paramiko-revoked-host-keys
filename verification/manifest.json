@@ -1,0 +1,154 @@
+{
+  "time": "2026-11-11T23:31:33+08:00",
+  "reviewed": true,
+  "frozen_commit": "1fc8a7c4c317b31a8076c591e424f03c2d21129e",
+  "files": [
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\regression-command.json",
+      "path": "regression-command.json",
+      "sha256": "ab78d07ab1b7f1fc281e52d92dd02035301e2e0012a758faf1a77d0ea7684737"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\regression.log",
+      "path": "regression.log",
+      "sha256": "da59ca22bed66ca297feac1b8811792aa30208fa43c6b4d4aeac77c66426ab95"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\regression.xml",
+      "path": "regression.xml",
+      "sha256": "a27418253852643c3d7c315713fe86babf67cf7c83e60d4e79f92eede82cb869"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\test-results.json",
+      "path": "test-results.json",
+      "sha256": "fef9539079013ee8862aa1691e2b1051f860973c3f18864942af984d8c2a039b"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\Feedback.md",
+      "path": "Feedback.md",
+      "sha256": "fa2ac2568a004733561fea25b25ce08785a382f77a0db66f0883122f8ed6e84d"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\evidence-map.json",
+      "path": "evidence-map.json",
+      "sha256": "ac9ab712c20d8d3fbc33e68d97a51e8f1a239cafc95faa7e0417f36df3487fb5"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\environment-reviewed.json",
+      "path": "environment-reviewed.json",
+      "sha256": "f2d838b7cab8d6e998093c4065643ff9751fe762a0e854e3d58d81e5539097fb"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\freeze-audit.json",
+      "path": "freeze-audit.json",
+      "sha256": "f6e9e095d1637862493c65f992e2ca75c1fc9eeaf2a6a0d999bd76a8227c1038"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\snapshot-proof.json",
+      "path": "snapshot-proof.json",
+      "sha256": "96675ff83d3d9690df4e1d578dfc61f7e45f273a314452146c3137b1c6179380"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\verification\\acceptance-r1\\acceptance-command.json",
+      "path": "acceptance-r1/acceptance-command.json",
+      "sha256": "79c85b2682f1a6e499d8672d0c294ff2b7e6f1980897aaa948ef72c94ea39583"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\verification\\acceptance-r1\\acceptance.log",
+      "path": "acceptance-r1/acceptance.log",
+      "sha256": "40a9420d3a561c39fd267f0d31f85a07b35a557097b11b2cca8a1d63659f4a29"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\verification\\acceptance-r1\\acceptance.xml",
+      "path": "acceptance-r1/acceptance.xml",
+      "sha256": "ecc7c1b73410617717fd6a863775d4ba268a3fdd0e8b13d3997caeb5bec18a10"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\verification\\acceptance-r1\\connection_check.py",
+      "path": "acceptance-r1/connection_check.py",
+      "sha256": "4bfcbf7795dc8daa8db9b8ff66a647112f1e9a2e5719e16782949ef0086b8d16"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\verification\\acceptance-r1\\test-results.json",
+      "path": "acceptance-r1/test-results.json",
+      "sha256": "a6dcccce5b0dccc1f0adbbd60fe86cd766399f752b56b434d6995656a2c8f5a2"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\verification\\acceptance-r1\\test_acceptance.py",
+      "path": "acceptance-r1/test_acceptance.py",
+      "sha256": "5757ffe9292e2b41ddd5b0b297361f4bcb5e0c8f794b8c03078f28b5f4e43c52"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\verification\\malformed-r3\\acceptance-command.json",
+      "path": "malformed-r3/acceptance-command.json",
+      "sha256": "89e38f2e15c5c8c107cb15c7eb22cac6617d7b6f4940015e6ed0cd24412a1ae0"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\verification\\malformed-r3\\acceptance-support.json",
+      "path": "malformed-r3/acceptance-support.json",
+      "sha256": "d2b8f2b7f70c2f1601cc3eb23c7495db3985f268610aac3a57bc2d76289a699e"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\verification\\malformed-r3\\acceptance.log",
+      "path": "malformed-r3/acceptance.log",
+      "sha256": "de61dc0574fecc2233d9d23140bbfa20c7cfee6bc738ed5c3a32e4102b18e9f8"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\verification\\malformed-r3\\acceptance.xml",
+      "path": "malformed-r3/acceptance.xml",
+      "sha256": "e7f792fc4afec69d2f33dbd215716e9fa527d2e8aef672e52987be71acbff14f"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\verification\\malformed-r3\\ssh_fixture_helpers.py",
+      "path": "malformed-r3/ssh_fixture_helpers.py",
+      "sha256": "5757ffe9292e2b41ddd5b0b297361f4bcb5e0c8f794b8c03078f28b5f4e43c52"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\verification\\malformed-r3\\test-results.json",
+      "path": "malformed-r3/test-results.json",
+      "sha256": "bd6c35b583758d5ce87763f78b552fb5b2cd1c5cbff847be91e2f63752372213"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\verification\\malformed-r3\\test_acceptance.py",
+      "path": "malformed-r3/test_acceptance.py",
+      "sha256": "b2313e9c694bcff72ae8ab6f74ac35ab9f09b3f30a896d741651145e275365c5"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\recording\\r1\\actual-commands.json",
+      "path": "recording/actual-commands.json",
+      "sha256": "472cd6a9f8c96822168dc58aa5e98ee8e65ce30b4fb548f4e408ff17fadfe389"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\recording\\r1\\content-review.json",
+      "path": "recording/content-review.json",
+      "sha256": "e582ce057e2b3b7d0c995590a619e2f55e45a06ffb35a1a70bcfd3376f07c0d4"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\recording\\r1\\recording-status.json",
+      "path": "recording/recording-status.json",
+      "sha256": "c4da3b2ed12d8e296f7c30d64a9c151571e6163e0c155ab5e27d2f84e9c25b9a"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\recording\\r1\\full-stream-check.json",
+      "path": "recording/full-stream-check.json",
+      "sha256": "5574c6b59f942b5e23c9d60fd19f90aa56f795668754982703013b69a22b4bd1"
+    },
+    {
+      "source": "D:\\hc\\userFeedback\\cache\\execution-security-high-resume-20261111\\evaluation\\uf-20261111-sec-03-ssh-revocation-high-20261111\\recording\\r1\\media-metadata.log",
+      "path": "recording/media-metadata.log",
+      "sha256": "3cf64cb88460078e4cc484386f0f432d1782163211410c43dc3361a26963f4e5"
+    }
+  ],
+  "reproduction_readme": "独立复核说明（UID117）\n\n这是模型单轮结束后对冻结版本的复核，不含追问或产物修补。建议评分 3 分，具体事实见 Feedback.md 与 evidence-map.json。模型原轨测试和下列独立测试分开记录。\n\n在 Windows Python 3.11 环境安装项目本身及 pytest、cryptography、bcrypt、PyNaCl（具体版本见 environment-reviewed.json）。从冻结提交创建干净 checkout，在 PowerShell 中将 TEMP/TMP 和所有测试临时目录放到自己的缓存目录。\n\n在仓库根目录执行（$verifyCache 为明确指定的缓存目录）：\n\n```powershell\n$env:PYTHONPATH=(Get-Location).Path\npython -B -m pytest -q -s -p no:cacheprovider tests/test_hostkeys.py tests/test_client.py --basetemp \"$verifyCache/regression\" --junitxml \"$verifyCache/regression.xml\" --disable-warnings\npython -B -m pytest -q -s -p no:cacheprovider verification/acceptance-r1/test_acceptance.py --basetemp \"$verifyCache/acceptance\" --junitxml \"$verifyCache/acceptance.xml\" --disable-warnings\npython -B -m pytest -q -s -p no:cacheprovider verification/malformed-r3/test_acceptance.py --basetemp \"$verifyCache/malformed\" --junitxml \"$verifyCache/malformed.xml\" --disable-warnings\n```\n\n三组结果分别为 78 passed / 2 skipped、22 passed / 2 failed、0 passed / 3 failed。后两组非零退出是如实保留的产物失败。每组均附用例、完整实际命令、原始日志、JUnit XML 和结果摘要。补充组使用同目录 ssh_fixture_helpers.py，不能遗漏该文件；旧 malformed-r2-run 的 helper 路径错误不属于有效成绩。密钥在运行时临时生成，认证仅在本地 socketpair 中进行，不需要容器或外部 SSH 服务。端口/随机指纹/耗时可能变化。\n\n录屏使用另外编写的连接检查控制台调用同版库；并非模型生成的产品 UI。第四个场景如实显示损坏撤销记录仍通过认证的失败。正式轨迹和 MP4 只放飞书相应附件，不放本验证分支。\n",
+  "excluded_engineering_attempts": [
+    {
+      "path": "verification/malformed-r2-run",
+      "reason": "评价工具未把 helper 放入执行目录导致 ModuleNotFoundError；不是模型缺陷，不评分"
+    },
+    {
+      "path": "verification/malformed-r2",
+      "reason": "仅预放 helper，未形成有效验收"
+    }
+  ],
+  "single_native_trajectory_elsewhere": true
+}
