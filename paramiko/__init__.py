@@ -63,6 +63,7 @@ from paramiko.ssh_exception import (
     MessageOrderError,
     PasswordRequiredException,
     ProxyCommandFailure,
+    RevokedHostKeyException,
     SSHException,
 )
 from paramiko.server import ServerInterface, SubsystemHandler, InteractiveQuery

@@ -38,6 +38,7 @@ from paramiko.rsakey import RSAKey
 from paramiko.ssh_exception import (
     BadHostKeyException,
     NoValidConnectionsError,
+    RevokedHostKeyException,
     SSHException,
 )
 from paramiko.transport import Transport
@@ -140,14 +141,10 @@ class SSHClient(ClosingContextManager):
         if self._host_keys_filename is not None:
             self.load_host_keys(self._host_keys_filename)
 
-        with open(filename, "w") as f:
-            for hostname, keys in self._host_keys.items():
-                for keytype, key in keys.items():
-                    f.write(
-                        "{} {} {}\n".format(
-                            hostname, keytype, key.get_base64()
-                        )
-                    )
+        # Delegate to HostKeys.save so @revoked marker lines are written back
+        # with their marker intact instead of being dropped or downgraded into
+        # ordinary trust records.
+        self._host_keys.save(filename)
 
     def get_host_keys(self):
         """
@@ -212,6 +209,27 @@ class SSHClient(ClosingContextManager):
         if guess:
             for family, _, _, _, sockaddr in addrinfos:
                 yield family, sockaddr
+
+    def _is_revoked_host_key(self, hostname, key):
+        """
+        Whether ``key`` is revoked for ``hostname`` in either the system or
+        the user known-hosts store.  Both stores are checked even when the
+        trust lookup itself only used one of them, so a revocation in one
+        file cannot be bypassed by a trust record in the other.
+        """
+        return self._system_host_keys.is_revoked(
+            hostname, key
+        ) or self._host_keys.is_revoked(hostname, key)
+
+    def _has_revocation_policy(self, hostname):
+        """
+        Whether either known-hosts store contains any ``@revoked`` record for
+        ``hostname``.  A host under revocation policy must not have unknown
+        replacement keys silently auto-added.
+        """
+        return self._system_host_keys.has_revocation(
+            hostname
+        ) or self._host_keys.has_revocation(hostname)
 
     def connect(
         self,
@@ -322,6 +340,13 @@ class SSHClient(ClosingContextManager):
 
         :raises BadHostKeyException:
             if the server's host key could not be verified.
+        :raises RevokedHostKeyException:
+            if the server's host key matches an ``@revoked`` record in the
+            system or user known-hosts files, or if the host has revoked keys
+            on record but presents an untrusted key. This is raised during
+            host identity verification, before any authentication is
+            attempted, and takes precedence over the missing-host-key policy
+            (including `AutoAddPolicy`).
         :raises AuthenticationException:
             if authentication failed.
         :raises UnableToAuthenticate:
@@ -443,7 +468,26 @@ class SSHClient(ClosingContextManager):
         t.start_client(timeout=timeout)
 
         server_key = t.get_remote_server_key()
+        # Revocation takes precedence over any trust record (in either store)
+        # and over the missing-host-key policy, including AutoAddPolicy. This
+        # runs during host identity verification, before any authentication
+        # credentials are sent, so a revoked key can never establish a
+        # session.
+        if self._is_revoked_host_key(server_hostkey_name, server_key):
+            raise RevokedHostKeyException(server_hostkey_name, server_key)
         if our_server_keys is None:
+            if self._has_revocation_policy(server_hostkey_name):
+                # The host has revoked keys on file but presented a key we do
+                # not trust. Do not fall back to AutoAdd/Warning acceptance
+                # and mask a possible key swap: fail closed instead.
+                raise RevokedHostKeyException(
+                    server_hostkey_name,
+                    server_key,
+                    message=(
+                        "Server '{}' has revoked host keys on record but "
+                        "presented untrusted key {}; refusing to accept it"
+                    ).format(server_hostkey_name, server_key.fingerprint),
+                )
             # will raise exception if the key is rejected
             self._policy.missing_host_key(
                 self, server_hostkey_name, server_key

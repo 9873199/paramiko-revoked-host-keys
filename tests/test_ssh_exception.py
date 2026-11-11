@@ -1,7 +1,7 @@
 import pickle
 import unittest
 
-from paramiko import RSAKey
+from paramiko import ECDSAKey, RSAKey
 from paramiko.ssh_exception import (
     NoValidConnectionsError,
     BadAuthenticationType,
@@ -9,6 +9,7 @@ from paramiko.ssh_exception import (
     ChannelException,
     BadHostKeyException,
     ProxyCommandFailure,
+    RevokedHostKeyException,
 )
 
 
@@ -64,6 +65,24 @@ class ExceptionStringDisplayTest(unittest.TestCase):
         assert str(exc) == expected.format(
             got_key.get_base64(), wanted_key.get_base64()
         )
+
+    def test_RevokedHostKeyException(self):
+        key = ECDSAKey.generate()
+        exc = RevokedHostKeyException("myhost", key)
+        assert str(exc) == (
+            "Host key {} for server 'myhost' has been revoked".format(
+                key.fingerprint
+            )
+        )
+        assert exc.hostname == "myhost"
+        assert exc.key == key
+        # The message exposes only the public fingerprint.
+        assert key.get_base64() not in str(exc)
+
+    def test_RevokedHostKeyException_custom_message(self):
+        key = ECDSAKey.generate()
+        exc = RevokedHostKeyException("myhost", key, message="nope")
+        assert str(exc) == "nope"
 
     def test_ProxyCommandFailure(self):
         exc = ProxyCommandFailure("man squid", 7)

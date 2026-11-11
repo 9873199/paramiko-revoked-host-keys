@@ -40,7 +40,11 @@ from paramiko import SSHClient
 from paramiko.agent import AgentKey
 from paramiko.ed25519key import Ed25519Key
 from paramiko.pkey import PublicBlob, UnknownKeyType
-from paramiko.ssh_exception import AuthenticationException, SSHException
+from paramiko.ssh_exception import (
+    AuthenticationException,
+    RevokedHostKeyException,
+    SSHException,
+)
 
 from ._util import _support, slow
 
@@ -715,6 +719,298 @@ class SSHClientTest(ClientTest):
         # With either bugfix in place, this will work; with regression around,
         # this would eg explode with AttributeError.
         self._test_connection(pkey=key, allowed_keys=["ssh-ed25519"])
+
+
+class HostKeyRevocationLoopbackTest(unittest.TestCase):
+    """
+    End-to-end checks of ``@revoked`` enforcement over a real (loopback)
+    SSH negotiation.  Host keys are generated per test, and the server side
+    records whether it ever received an authentication request: a revoked or
+    untrusted-under-revocation key must be rejected during host verification,
+    before any credentials are sent.
+    """
+
+    def setUp(self):
+        # Two distinct, server-usable keys of different ECDSA curves, so the
+        # server can offer a legitimate alternative key after revocation.
+        self.key_primary = paramiko.ECDSAKey.generate()
+        self.key_alt = paramiko.ECDSAKey.generate(bits=384)
+
+        self.sockl = socket.socket()
+        self.sockl.bind(("127.0.0.1", 0))
+        self.sockl.listen(1)
+        self.addr, self.port = self.sockl.getsockname()
+        self.host_id = f"[{self.addr}]:{self.port}"
+
+        self.event = threading.Event()
+        self.kill_event = threading.Event()
+        self.server_state = {}
+
+    def tearDown(self):
+        if "client" in self.server_state:
+            self.server_state["client"].close()
+        self.kill_event.set()
+        try:
+            probe = socket.socket()
+            probe.connect((self.addr, self.port))
+            probe.close()
+        except OSError:
+            pass
+        self.sockl.close()
+        for path in getattr(self, "_temp_files", []):
+            if os.path.exists(path):
+                os.unlink(path)
+
+    def _known_hosts_line(self, host, key, revoked=False):
+        marker = "@revoked " if revoked else ""
+        return f"{marker}{host} {key.get_name()} {key.get_base64()}\n"
+
+    def _write_file(self, lines):
+        fd, path = mkstemp()
+        os.close(fd)
+        with open(path, "w") as f:
+            f.writelines(lines)
+        self._temp_files = getattr(self, "_temp_files", []) + [path]
+        return path
+
+    def _run_server(self, server_keys):
+        def target():
+            socks, _ = self.sockl.accept()
+            if self.kill_event.is_set():
+                socks.close()
+                return
+            ts = paramiko.Transport(socks)
+            for key in server_keys:
+                ts.add_server_key(key)
+            server = _RecordingServer()
+            self.server_state["transport"] = ts
+            self.server_state["server"] = server
+            ts.start_server(self.event, server)
+            self.event.wait(5)
+
+        threading.Thread(target=target).start()
+
+    def _connect(self, client, **overrides):
+        kwargs = dict(
+            hostname=self.addr,
+            port=self.port,
+            username="slowdive",
+            password="pygmalion",
+            look_for_keys=False,
+            allow_agent=False,
+        )
+        kwargs.update(overrides)
+        self.server_state["client"] = client
+        return client.connect(**kwargs)
+
+    def test_revoked_key_rejected_even_when_also_trusted(self):
+        # Same key present as an ordinary trust record AND as @revoked.
+        known = self._write_file(
+            [
+                self._known_hosts_line(self.host_id, self.key_primary),
+                self._known_hosts_line(
+                    self.host_id, self.key_primary, revoked=True
+                ),
+            ]
+        )
+        self._run_server([self.key_primary, self.key_alt])
+        client = SSHClient()
+        client.load_host_keys(known)
+        # Even the permissive policy must not rescue a revoked key.
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        with pytest.raises(RevokedHostKeyException):
+            self._connect(client)
+        self._assert_no_auth_reached_server()
+        # AutoAddPolicy must not have recorded the revoked key as trusted.
+        self.assertFalse(
+            client.get_host_keys().check(self.host_id, self.key_primary)
+        )
+
+    def test_auto_add_policy_does_not_mask_revocation(self):
+        # Only a revocation record exists (no trust at all) for the presented
+        # key; AutoAddPolicy must still refuse.
+        known = self._write_file(
+            [
+                self._known_hosts_line(
+                    self.host_id, self.key_primary, revoked=True
+                )
+            ]
+        )
+        self._run_server([self.key_primary, self.key_alt])
+        client = SSHClient()
+        client.load_host_keys(known)
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        with pytest.raises(RevokedHostKeyException):
+            self._connect(client)
+        self._assert_no_auth_reached_server()
+
+    def test_untrusted_alternative_key_fails_closed_under_revocation_policy(
+        self,
+    ):
+        # Host has the primary key revoked and no trust for the alternative;
+        # the server presents the alternative. All usable keys are untrusted,
+        # so acceptance must not fall back to AutoAddPolicy. Force the client
+        # to negotiate the alternative (p384) key rather than the revoked one.
+        known = self._write_file(
+            [
+                self._known_hosts_line(
+                    self.host_id, self.key_primary, revoked=True
+                )
+            ]
+        )
+        self._run_server([self.key_primary, self.key_alt])
+        client = SSHClient()
+        client.load_host_keys(known)
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        with pytest.raises(RevokedHostKeyException):
+            self._connect(
+                client,
+                disabled_algorithms={"keys": [self.key_primary.get_name()]},
+            )
+        self._assert_no_auth_reached_server()
+
+    def test_alternative_legitimate_key_uses_normal_trust_rules(self):
+        # Primary key revoked, alternative key explicitly trusted. The server
+        # should negotiate the alternative key and the connection succeeds.
+        known = self._write_file(
+            [
+                self._known_hosts_line(
+                    self.host_id, self.key_primary, revoked=True
+                ),
+                self._known_hosts_line(self.host_id, self.key_alt),
+            ]
+        )
+        self._run_server([self.key_primary, self.key_alt])
+        client = SSHClient()
+        client.load_host_keys(known)
+        client.set_missing_host_key_policy(paramiko.RejectPolicy())
+        self._connect(client)
+        self.event.wait(2)
+        negotiated = client.get_transport().get_remote_server_key()
+        self.assertEqual(self.key_alt.get_name(), negotiated.get_name())
+        self.assertTrue(self.server_state["transport"].is_authenticated())
+        self.assertTrue(self.server_state["server"].auth_requested)
+
+    def test_revocation_in_system_file_beats_trust_in_user_file(self):
+        system_known = self._write_file(
+            [
+                self._known_hosts_line(
+                    self.host_id, self.key_primary, revoked=True
+                )
+            ]
+        )
+        user_known = self._write_file(
+            [self._known_hosts_line(self.host_id, self.key_primary)]
+        )
+        self._run_server([self.key_primary, self.key_alt])
+        client = SSHClient()
+        client.load_system_host_keys(system_known)
+        client.load_host_keys(user_known)
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        with pytest.raises(RevokedHostKeyException):
+            self._connect(client)
+        self._assert_no_auth_reached_server()
+
+    def test_error_message_names_target_and_public_fingerprint_only(self):
+        known = self._write_file(
+            [
+                self._known_hosts_line(
+                    self.host_id, self.key_primary, revoked=True
+                )
+            ]
+        )
+        self._run_server([self.key_primary, self.key_alt])
+        client = SSHClient()
+        client.load_host_keys(known)
+        client.set_missing_host_key_policy(paramiko.RejectPolicy())
+        with pytest.raises(RevokedHostKeyException) as caught:
+            self._connect(client)
+        message = str(caught.value)
+        self.assertIn(self.host_id, message)
+        self.assertIn(self.key_primary.fingerprint, message)
+        # No public blob, and certainly no private key material.
+        self.assertNotIn(self.key_primary.get_base64(), message)
+
+    def test_no_revocation_configuration_keeps_legacy_behavior(self):
+        # Compatibility: with ordinary trust records and no @revoked lines,
+        # RejectPolicy accepts the matching known key and auth proceeds.
+        known = self._write_file(
+            [self._known_hosts_line(self.host_id, self.key_primary)]
+        )
+        self._run_server([self.key_primary, self.key_alt])
+        client = SSHClient()
+        client.load_host_keys(known)
+        client.set_missing_host_key_policy(paramiko.RejectPolicy())
+        self._connect(client)
+        self.event.wait(2)
+        self.assertTrue(self.server_state["transport"].is_authenticated())
+        self.assertTrue(self.server_state["server"].auth_requested)
+
+    def test_no_revocation_and_unknown_host_still_uses_policy(self):
+        # Compatibility: no revocation and an unknown host still defers to the
+        # configured missing-host-key policy (AutoAdd accepts here).
+        self._run_server([self.key_primary, self.key_alt])
+        client = SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        self._connect(client)
+        self.event.wait(2)
+        self.assertTrue(self.server_state["transport"].is_authenticated())
+        self.assertEqual(1, len(client.get_host_keys()))
+
+    def test_save_host_keys_preserves_revocation_marker(self):
+        known = self._write_file(
+            [
+                self._known_hosts_line(self.host_id, self.key_alt),
+                self._known_hosts_line(
+                    self.host_id, self.key_primary, revoked=True
+                ),
+            ]
+        )
+        client = SSHClient()
+        client.load_host_keys(known)
+        out = self._write_file([])
+        client.save_host_keys(out)
+        with open(out) as f:
+            content = f.read()
+        self.assertIn("@revoked ", content)
+        reloaded = paramiko.HostKeys(out)
+        self.assertTrue(
+            reloaded.is_revoked(self.host_id, self.key_primary)
+        )
+
+    def _assert_no_auth_reached_server(self):
+        # Give the server thread a moment, then prove host verification failed
+        # before the authentication stage.
+        self.event.wait(2)
+        server = self.server_state.get("server")
+        self.assertIsNotNone(server)
+        self.assertFalse(
+            server.auth_requested,
+            "server must not receive any authentication request",
+        )
+
+
+class _RecordingServer(paramiko.ServerInterface):
+    """ServerInterface that records whether authentication was attempted."""
+
+    def __init__(self):
+        self.auth_requested = False
+
+    def get_allowed_auths(self, username):
+        return "publickey,password"
+
+    def check_auth_password(self, username, password):
+        self.auth_requested = True
+        if username == "slowdive" and password == "pygmalion":
+            return paramiko.AUTH_SUCCESSFUL
+        return paramiko.AUTH_FAILED
+
+    def check_auth_publickey(self, username, key):
+        self.auth_requested = True
+        return paramiko.AUTH_FAILED
+
+    def check_channel_request(self, kind, chanid):
+        return paramiko.OPEN_SUCCEEDED
 
 
 class PasswordPassphraseTests(ClientTest):

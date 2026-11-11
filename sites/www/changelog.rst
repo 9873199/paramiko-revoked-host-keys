@@ -2,6 +2,33 @@
 Changelog
 =========
 
+- :feature:`-` Added support for the OpenSSH ``@revoked`` known-hosts marker,
+  in both `~paramiko.hostkeys.HostKeys` (parsing, lookup and round-tripping)
+  and `~paramiko.client.SSHClient.connect` (enforcement during host identity
+  verification, before any authentication credentials are sent).
+
+  Highlights:
+
+  - Revocation always wins: a key that is both trusted and revoked is treated
+    as revoked, even when the trust and revocation records live in different
+    files (e.g. a system-wide and a per-user known-hosts file).
+  - If a server presents a different, still-legitimate key that remains
+    trusted, the normal trust rules apply and the connection proceeds.
+  - When a host has revoked keys on record but presents a key that is not
+    trusted, the client now fails closed instead of falling back to
+    `~paramiko.client.AutoAddPolicy` (or `~paramiko.client.WarningPolicy`) and
+    silently accepting a possible key swap. The new
+    `~paramiko.ssh_exception.RevokedHostKeyException` is raised.
+  - Multi-name, hashed (``|1|...``) and non-default-port (``[host]:port``)
+    hostnames are all matched the same way as ordinary records.
+  - A malformed ``@revoked`` line now aborts the file load with
+    `~paramiko.hostkeys.InvalidHostKey` (now an `~paramiko.ssh_exception.SSHException`
+    subclass) instead of being silently dropped, while a missing file still
+    raises the ordinary I/O error; the two cases remain distinguishable.
+    Malformed *ordinary* lines keep their historical skip behavior.
+  - `~paramiko.client.SSHClient.save_host_keys` writes revoked records back
+    with their marker intact, so saving never downgrades a revocation into a
+    plain trust record.
 - :release:`5.1.0 <2026-10-17>`
 - :release:`5.0.1 <2026-10-17>`
 - :bug:`2462` (w/ earlier fix attempts :issue:`2475` and :issue:`2465`) An API

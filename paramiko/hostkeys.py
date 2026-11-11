@@ -51,10 +51,13 @@ class HostKeys(MutableMapping):
         """
         # emulate a dict of { hostname: { keytype: PKey } }
         self._entries = []
+        # ``@revoked`` marker lines are kept separately so they can never be
+        # downgraded into, or confused with, ordinary trust records.
+        self._revoked = []
         if filename is not None:
             self.load(filename)
 
-    def add(self, hostname, keytype, key):
+    def add(self, hostname, keytype, key, revoked=False):
         """
         Add a host key entry to the table.  Any existing entry for a
         ``(hostname, keytype)`` pair will be replaced.
@@ -62,12 +65,17 @@ class HostKeys(MutableMapping):
         :param str hostname: the hostname (or IP) to add
         :param str keytype: key type (in ``"ssh-<type>"`` format)
         :param .PKey key: the key to add
+        :param bool revoked:
+            when ``True``, record the key under an ``@revoked`` marker instead
+            of as a trusted key.  A revoked key can never be used to verify a
+            server, even if a matching trust record also exists.
         """
-        for e in self._entries:
+        bucket = self._revoked if revoked else self._entries
+        for e in bucket:
             if (hostname in e.hostnames) and (e.key.get_name() == keytype):
                 e.key = key
                 return
-        self._entries.append(HostKeyEntry([hostname], key))
+        bucket.append(HostKeyEntry([hostname], key, revoked=revoked))
 
     def load(self, filename):
         """
@@ -76,13 +84,27 @@ class HostKeys(MutableMapping):
         posix, it will usually be stored in
         ``os.path.expanduser("~/.ssh/known_hosts")``.
 
+        Both ordinary trust records and ``@revoked`` marker lines are parsed.
+        Revoked records are stored separately and always take precedence over
+        trust for the same host key, including trust established by another
+        file merged via a subsequent call to this method.
+
         If this method is called multiple times, the host keys are merged,
         not cleared.  So multiple calls to `load` will just call `add`,
         replacing any existing entries and adding new ones.
 
         :param str filename: name of the file to read host keys from
 
-        :raises: ``IOError`` -- if there was an error reading the file
+        :raises: ``IOError`` --
+            if there was an error reading the file, including a missing file
+            (callers that treat a missing file as empty must handle this
+            themselves).
+        :raises: `.InvalidHostKey` --
+            if the file contains a malformed ``@revoked`` line.  A corrupt
+            revocation record is security policy that must not be silently
+            discarded, so it aborts the load; a missing file and a corrupt file
+            are thus distinguishable.  Malformed *ordinary* lines retain their
+            historical behavior of being logged and skipped.
         """
         with open(filename, "r") as f:
             for lineno, line in enumerate(f, 1):
@@ -92,14 +114,31 @@ class HostKeys(MutableMapping):
                 try:
                     entry = HostKeyEntry.from_line(line, lineno)
                 except SSHException:
+                    if line.startswith("@revoked"):
+                        # Fail closed: silently dropping an unparseable
+                        # revocation could leave a banned key trusted.
+                        raise
+                    # Backwards compatibility: skip unparseable ordinary lines.
                     continue
-                if entry is not None:
-                    _hostnames = entry.hostnames
-                    for h in _hostnames:
-                        if self.check(h, entry.key):
-                            entry.hostnames.remove(h)
-                    if len(entry.hostnames):
-                        self._entries.append(entry)
+                if entry is None:
+                    continue
+                if entry.revoked:
+                    # Drop hostnames already covered by an equivalent revoked
+                    # record, but keep any that are not yet revoked.
+                    entry.hostnames = [
+                        h
+                        for h in entry.hostnames
+                        if not self.is_revoked(h, entry.key)
+                    ]
+                    if entry.hostnames:
+                        self._revoked.append(entry)
+                    continue
+                _hostnames = entry.hostnames
+                for h in _hostnames:
+                    if self.check(h, entry.key):
+                        entry.hostnames.remove(h)
+                if len(entry.hostnames):
+                    self._entries.append(entry)
 
     def save(self, filename):
         """
@@ -108,6 +147,9 @@ class HostKeys(MutableMapping):
         loaded from a file originally).  The single exception is that combined
         lines will be split into individual key lines, which is arguably a bug.
 
+        ``@revoked`` records are written back with their marker intact, so
+        saving never turns a revocation into an ordinary trust record.
+
         :param str filename: name of the file to write
 
         :raises: ``IOError`` -- if there was an error writing the file
@@ -115,7 +157,7 @@ class HostKeys(MutableMapping):
         .. versionadded:: 1.6.1
         """
         with open(filename, "w") as f:
-            for e in self._entries:
+            for e in self._revoked + self._entries:
                 line = e.to_line()
                 if line:
                     f.write(line)
@@ -208,11 +250,17 @@ class HostKeys(MutableMapping):
         Return True if the given key is associated with the given hostname
         in this dictionary.
 
+        Revoked keys never check out: if ``key`` matches an ``@revoked``
+        record for ``hostname``, this always returns ``False`` even when an
+        ordinary trust record for the same key is also present.
+
         :param str hostname: hostname (or IP) of the SSH server
         :param .PKey key: the key to check
         :return:
             ``True`` if the key is associated with the hostname; else ``False``
         """
+        if self.is_revoked(hostname, key):
+            return False
         k = self.lookup(hostname)
         if k is None:
             return False
@@ -221,11 +269,58 @@ class HostKeys(MutableMapping):
             return False
         return host_key.asbytes() == key.asbytes()
 
+    def is_revoked_for(self, hostnames, key):
+        """
+        Whether ``key`` is revoked for any of the given (already-parsed) host
+        name strings.  Supports multi-name and hashed (``|1|...``) entries by
+        delegating hostname matching to `_hostname_matches`.
+        """
+        for entry in self._revoked:
+            if entry.key.get_name() != key.get_name():
+                continue
+            if entry.key.asbytes() != key.asbytes():
+                continue
+            for hostname in hostnames:
+                if self._hostname_matches(hostname, entry):
+                    return True
+        return False
+
+    def is_revoked(self, hostname, key):
+        """
+        Return True if the given key is marked revoked (via an ``@revoked``
+        marker line) for the given hostname.
+
+        Revocation is key-based: an ``@revoked`` line only revokes the exact
+        public key it names, for the hostnames it lists.  Hashed hostnames and
+        non-default-port host names (``[host]:port``) are matched the same way
+        as ordinary records.
+
+        :param str hostname: hostname (or IP, possibly ``[host]:port``) of the
+            SSH server
+        :param .PKey key: the host key to check
+        :return: ``True`` if an ``@revoked`` record matches, else ``False``
+        """
+        return self.is_revoked_for([hostname], key)
+
+    def has_revocation(self, hostname):
+        """
+        Return True if any ``@revoked`` record applies to the given hostname,
+        regardless of which key it revokes.
+
+        This marks a host as being under explicit revocation policy, so that an
+        unknown replacement key cannot be silently auto-accepted for it.
+        """
+        for entry in self._revoked:
+            if self._hostname_matches(hostname, entry):
+                return True
+        return False
+
     def clear(self):
         """
         Remove all host keys from the dictionary.
         """
         self._entries = []
+        self._revoked = []
 
     def __iter__(self):
         for k in self.keys():
@@ -302,7 +397,7 @@ class HostKeys(MutableMapping):
         return hostkey.replace("\n", "")
 
 
-class InvalidHostKey(Exception):
+class InvalidHostKey(SSHException):
     def __init__(self, line, exc):
         self.line = line
         self.exc = exc
@@ -312,12 +407,17 @@ class InvalidHostKey(Exception):
 class HostKeyEntry:
     """
     Representation of a line in an OpenSSH-style "known hosts" file.
+
+    Entries parsed from an ``@revoked`` marker line have ``revoked`` set to
+    ``True``; such an entry bans its key for the listed hostnames instead of
+    trusting it.
     """
 
-    def __init__(self, hostnames=None, key=None):
+    def __init__(self, hostnames=None, key=None, revoked=False):
         self.valid = (hostnames is not None) and (key is not None)
         self.hostnames = hostnames
         self.key = key
+        self.revoked = revoked
 
     @classmethod
     def from_line(cls, line, lineno=None):
@@ -327,14 +427,37 @@ class HostKeyEntry:
         format used by the OpenSSH known_hosts file. Fields are separated by a
         single space or tab.
 
+        Lines beginning with the ``@revoked`` marker are parsed like ordinary
+        lines but produce an entry whose ``revoked`` attribute is ``True``.
+        Other markers (e.g. ``@cert-authority``) yield ``None``.
+
         Lines are expected to not have leading or trailing whitespace.
         We don't bother to check for comments or empty lines.  All of
         that should be taken care of before sending the line to us.
 
         :param str line: a line from an OpenSSH known_hosts file
+
+        :raises: `.InvalidHostKey` --
+            if the line is structurally a host key (or ``@revoked``) record
+            but its key data cannot be decoded or its key type is invalid;
+            callers loading a file should let this propagate rather than
+            treating the file as intact.
         """
         log = get_logger("paramiko.hostkeys")
         fields = re.split(" |\t", line)
+        revoked = False
+        if fields and fields[0].startswith("@"):
+            marker = fields.pop(0)
+            if marker == "@revoked":
+                revoked = True
+            else:
+                # Unsupported markers (cert-authority, ...) are not trusted
+                # host key records; skip them without touching the key data.
+                log.info(
+                    "Ignoring unsupported known_hosts marker {} "
+                    "in line {}".format(marker, lineno)
+                )
+                return None
         if len(fields) < 3:
             # Bad number of fields
             msg = "Not enough fields found in known_hosts in line {} ({!r})"
@@ -357,7 +480,11 @@ class HostKeyEntry:
             raise InvalidHostKey(line, e)
 
         try:
-            return cls(names, PKey.from_type_string(key_type, key_bytes))
+            return cls(
+                names,
+                PKey.from_type_string(key_type, key_bytes),
+                revoked=revoked,
+            )
         except UnknownKeyType:
             # TODO (backwards incompat): consider changing HostKeys API so this
             # just raises naturally and the exception is muted higher up in the
@@ -369,10 +496,13 @@ class HostKeyEntry:
         """
         Returns a string in OpenSSH known_hosts file format, or None if
         the object is not in a valid state.  A trailing newline is
-        included.
+        included.  Revoked entries keep their ``@revoked`` marker so they
+        are not silently written back as ordinary trust records.
         """
         if self.valid:
-            return "{} {} {}\n".format(
+            marker = "@revoked " if self.revoked else ""
+            return "{}{} {} {}\n".format(
+                marker,
                 ",".join(self.hostnames),
                 self.key.get_name(),
                 self.key.get_base64(),
@@ -380,4 +510,7 @@ class HostKeyEntry:
         return None
 
     def __repr__(self):
-        return "<HostKeyEntry {!r}: {!r}>".format(self.hostnames, self.key)
+        kind = "revoked " if self.revoked else ""
+        return "<HostKeyEntry {}{!r}: {!r}>".format(
+            kind, self.hostnames, self.key
+        )

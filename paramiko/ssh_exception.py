@@ -140,6 +140,41 @@ class BadHostKeyException(SSHException):
         )
 
 
+class RevokedHostKeyException(SSHException):
+    """
+    The host key given by the SSH server has been explicitly revoked via an
+    ``@revoked`` marker line in a known hosts file.
+
+    Revocation takes precedence over any trust record for the same key,
+    including entries in a different known hosts file, and is enforced before
+    any authentication credentials are sent.
+
+    :param str hostname: the hostname (including non-default port, when
+        applicable) of the SSH server
+    :param PKey key: the host key presented by the server
+    :param str message: optional override for the rendered error message
+
+    .. versionadded:: 5.2
+    """
+
+    def __init__(self, hostname, key, message=None):
+        SSHException.__init__(self, hostname, key)
+        self.hostname = hostname
+        self.key = key
+        self._message = message
+
+    def __str__(self):
+        if self._message is not None:
+            return self._message
+        # Only the public fingerprint is ever included; no credentials (no
+        # passwords or private key material) appear in this message.
+        return (
+            "Host key {} for server '{}' has been revoked".format(
+                self.key.fingerprint, self.hostname
+            )
+        )
+
+
 class IncompatiblePeer(SSHException):
     """
     A disagreement arose regarding an algorithm required for key exchange.
